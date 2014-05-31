@@ -3,8 +3,9 @@
 class Template{
 
   private $_datos = array();
+  private $_template;
   public function __construct(){
-
+    $this->_template;
   }
 
 
@@ -12,8 +13,16 @@ class Template{
     $this->_datos [$var]= $datos;
   }
 
-  public function getDatos(){
-    return $this->_datos;
+  public function getDatos($vista){
+    $this->_template = file_get_contents($vista);
+    foreach ($this->_datos as $clave=>$valor) {
+      $this->_template = str_replace('{'.$clave.'}', $valor, $this->_template);
+    }
+  }
+
+  public function render($vista){
+    $this->getDatos($vista);
+    return $this->_template;
   }
 
 }
@@ -21,13 +30,7 @@ class Template{
 $T = new Template();
 $T->setDatos("V1","Primera variable");
 $T->setDatos("V2","Segunda variable");
-echo "<pre>";print_r($T->getDatos());
+echo $T->render("vistas/template.html");
 
-$datos = array(
-  "dato1" => "D1",
-  "dato2" => "D2"
-);
-
-echo "<pre>";print_r($datos);
 
 ?>
